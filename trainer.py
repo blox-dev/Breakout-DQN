@@ -29,11 +29,12 @@ def create_model():
     )
     return model
 
+
 model = create_model()
 target_model = create_model()
 
 # Uncomment and complete filename to continue training from file
-# model = models.load_model('models/xxxx-xx-xx-xx-xx-xx')
+# model = models.load_model('models/model-xxxx-xx-xx-xx-xx-xx')
 # target_model.set_weights(model.get_weights())
 
 discount = 0.99
@@ -44,7 +45,7 @@ epsilon_decay = (epsilon - epsilon_min) / epsilon_steps
 batch_size = 32
 
 state_history = []
-episode_rewards = []
+episode_rewards = [0]
 episode_count = 0
 frame_count = 0
 
@@ -85,12 +86,11 @@ while True:  # Run until solved
 
         # Fit model every 4 frames
         if frame_count % 4 == 0 and len(state_history) - 1 > batch_size:
-
             # Select minibatch frames
             i_list = np.random.choice(range(len(state_history) - 1), size=batch_size)
 
             state_sample = np.array([state_history[i][0] for i in i_list])
-            next_state_sample = np.array([state_history[i+1][0] for i in i_list])
+            next_state_sample = np.array([state_history[i + 1][0] for i in i_list])
             reward_sample = np.array([state_history[i][2] for i in i_list])
             done_sample = np.array([float(state_history[i][3]) for i in i_list])
 
